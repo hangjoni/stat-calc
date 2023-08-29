@@ -13,27 +13,41 @@
           </div>
           <div class="a">
             <span>A</span>
-            <input type="text" class="visitor" id="aVisitor" value="50000" />
+            <input
+              type="text"
+              class="visitor"
+              id="aVisitor"
+              v-model="aVisitor"
+            />
             <input
               type="text"
               class="conversion"
               id="aConversion"
-              value="500"
+              v-model="aConversion"
             />
             <div id="arrow"></div>
-            <div class="conversion-rate" id="aConversionRate">2%</div>
+            <div class="conversion-rate" id="aConversionRate">
+              {{ aConversionRate }}%
+            </div>
           </div>
           <div class="b">
             <span>B</span>
-            <input type="text" class="visitor" id="bVisitor" value="50000" />
+            <input
+              type="text"
+              class="visitor"
+              id="bVisitor"
+              v-model="bVisitor"
+            />
             <input
               type="text"
               class="conversion"
               id="bConversion"
-              value="500"
+              v-model="bConversion"
             />
             <div id="arrow"></div>
-            <div class="conversion-rate" id="bConversionRate">1%</div>
+            <div class="conversion-rate" id="bConversionRate">
+              {{ bConversionRate }}%
+            </div>
           </div>
         </div>
         <div class="input-settings">
@@ -41,11 +55,21 @@
             <legend>Hypothesis</legend>
             <div class="choices">
               <div>
-                <input type="radio" id="one-sided" value="one-sided" />
+                <input
+                  type="radio"
+                  id="one-sided"
+                  value="false"
+                  v-model="isTwoTailed"
+                />
                 <label for="one-sided">One-Sided</label>
               </div>
               <div>
-                <input type="radio" id="two-sided" value="two-sided" checked />
+                <input
+                  type="radio"
+                  id="two-sided"
+                  value="true"
+                  v-model="isTwoTailed"
+                />
                 <label for="two-sided">Two-Sided</label>
               </div>
             </div>
@@ -54,15 +78,30 @@
             <legend>Confidence</legend>
             <div class="choices">
               <div>
-                <input type="radio" id="ninety" value="0.9" />
+                <input
+                  type="radio"
+                  id="ninety"
+                  value="90"
+                  v-model="confidence"
+                />
                 <label for="ninety">90%</label>
               </div>
               <div>
-                <input type="radio" id="ninety-five" value="0.95" checked />
+                <input
+                  type="radio"
+                  id="ninety-five"
+                  value="95"
+                  v-model="confidence"
+                />
                 <label for="ninety-five">95%</label>
               </div>
               <div>
-                <input type="radio" id="ninety-nine" value="0.99" />
+                <input
+                  type="radio"
+                  id="ninety-nine"
+                  value="99"
+                  v-model="confidence"
+                />
                 <label for="ninety-five">99%</label>
               </div>
             </div>
@@ -71,16 +110,19 @@
         <button type="submit" formmethod="get">Calculate</button>
       </div>
       <div class="result">
-        <h3 class="summary">Test summary</h3>
-        <p class="details">Test details</p>
+        <h3 class="summary">{{ result.testSummary }}</h3>
+        <div class="details">
+          <span>{{ result.details }}</span>
+          <span>{{ result.testResult }}</span>
+        </div>
         <div class="stats">
           <div class="power">
             <span>Power</span>
-            <span>80%</span>
+            <span>{{ result.power }}</span>
           </div>
           <div class="pvalue">
             <span>p value</span>
-            <span>0.01</span>
+            <span>{{ result.pvalue }}</span>
           </div>
         </div>
       </div>
@@ -89,7 +131,60 @@
 </template>
 
 <script>
-export default {};
+import { ref, computed } from "vue";
+import ABTest from "../composables/statTests.js";
+
+export default {
+  setup() {
+    let aVisitor = ref(50000);
+    let aConversion = ref(500);
+    let bVisitor = ref(50000);
+    let bConversion = ref(570);
+    let isTwoTailed = ref(true);
+    let confidence = ref(95);
+
+    let aConversionRate = computed(() => {
+      return ((aConversion.value * 100) / aVisitor.value).toFixed(2);
+    });
+
+    let bConversionRate = computed(() => {
+      return ((bConversion.value * 100) / bVisitor.value).toFixed(2);
+    });
+
+    let result = computed(() => {
+      return ABTest(
+        aVisitor.value,
+        bVisitor.value,
+        aConversion.value,
+        bConversion.value,
+        confidence.value,
+        isTwoTailed.value
+      );
+    });
+    console.log("result", result.value);
+
+    let color = computed(() => {
+      if (result.value.isStatSig) {
+        return { main: "#00bf6f", minor: "#1ac67e" };
+      } else {
+        return { main: "#05467e", minor: "#1e598b" };
+      }
+    });
+
+    return {
+      aVisitor,
+      aConversion,
+      aConversionRate,
+      bVisitor,
+      bConversion,
+      bConversionRate,
+      isTwoTailed,
+      confidence,
+      result,
+      color,
+    };
+  },
+};
 </script>
 
 <style>
@@ -99,6 +194,8 @@ export default {};
   --l-color: #1ac67e;
   --w-color: #ffffff;
   --g-color: #a1a4a7;
+  --color-main: v-bind("color.main");
+  --color-minor: v-bind("color.minor");
   background-color: var(--bg-color);
   padding: 2rem;
 }
@@ -137,7 +234,7 @@ export default {};
   background-color: var(--w-color);
 }
 .b {
-  background-color: var(--hl-color);
+  background-color: var(--color-main);
 }
 .a input,
 .b input {
@@ -152,7 +249,7 @@ export default {};
   border: none;
 }
 .b input {
-  background-color: var(--l-color);
+  background-color: var(--color-minor);
   color: var(--w-color);
 }
 .conversion-rate {
@@ -204,6 +301,10 @@ button {
 }
 .result .details {
   min-height: 10rem;
+  margin: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .result .stats {
   display: flex;
