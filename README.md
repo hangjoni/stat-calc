@@ -1,24 +1,14 @@
-# stat-calc
+TODO:
 
-## Project setup
-```
-npm install
-```
+- responsive layout
+- handle NaN in Power and pValue
+- add route props so user can reload and keep their results
+- Result only recalculated if press 'calculate button'
+- add back button
+- check the logic for A/B test
+- add logic for checking minimum effect size
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Resources:
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- [Frequentist A/B testing from scratch](https://www.kaggle.com/code/cstorm3000/frequestist-a-b-testing-from-scratch)
+- [Bayesian A/B testing from scratch](https://www.kaggle.com/code/cstorm3000/bayesian-a-b-testing-from-scratch)
