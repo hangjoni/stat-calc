@@ -210,6 +210,7 @@ export default {
 }
 .calculator .body .input {
   min-width: 30rem;
+  margin: 3rem;
 }
 .label,
 .a,
@@ -244,6 +245,7 @@ export default {
   padding: 0.5em;
   border-radius: 5px;
   font-weight: 500;
+  margin: 1rem;
 
   /* remove default border styling */
   border: none;
@@ -292,8 +294,9 @@ button {
   background-color: var(--w-color);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   padding-bottom: 1rem;
+  font-size: 1.2rem;
 }
 .result .summary {
   font-size: 2rem;
