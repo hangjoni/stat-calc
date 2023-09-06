@@ -1,14 +1,14 @@
 <template>
   <div class="home">
     <h3>A/B Test Calculator</h3>
-    <Calculator />
+    <Calculator2 />
   </div>
 </template>
 
 <script>
-import Calculator from "../components/Calculator.vue";
+import Calculator2 from "../components/Calculator2.vue";
 export default {
   name: "HomeView",
-  components: { Calculator },
+  components: { Calculator2 },
 };
 </script>
