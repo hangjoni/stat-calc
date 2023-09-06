@@ -2,6 +2,7 @@ TODO:
 
 - responsive layout
 - handle NaN in Power and pValue
+- error handling
 - add route props so user can reload and keep their results
 - Result only recalculated if press 'calculate button'
 - add back button
