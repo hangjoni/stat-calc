@@ -1,48 +1,51 @@
 <template>
   <div class="calculator">
-    <h1>Calculate your statistical significance</h1>
     <div
-      class="bg-slate-100 w-full p-8 flex flex-col justify-evenly sm:flex-row gap-3 text-sm"
+      class="bg-slate-100 w-full p-12 flex flex-col justify-evenly items-center md:items-start md:flex-row gap-6 text-lg my-2"
     >
-      <div class="w-1/2">
-        <div class="input-nums">
-          <div class="grid grid-cols-5 p-3">
+      <!-- The left side: Calculator input -->
+      <div class="md:w-1/2">
+        <div class="input-nums shadow-md">
+          <div class="grid grid-cols-calc gap-3 p-3">
             <span></span>
             <span>Visitors</span>
             <span>Conversions</span>
             <span></span>
             <span>Conversion rate</span>
           </div>
-          <div class="grid grid-cols-5 p-3 bg-green-600 text-white">
+          <div
+            class="grid grid-cols-calc gap-3 p-3 text-white"
+            :class="result.isStatSig ? 'bg-greenMain' : 'bg-blueMain'"
+          >
             <span>A</span>
             <input
               type="text"
-              class="bg-green-500 text-white"
+              class="text-white text-center"
+              :class="result.isStatSig ? 'bg-greenMinor' : 'bg-blueMinor'"
               id="aVisitor"
               v-model="aVisitor"
             />
             <input
               type="text"
-              class="bg-green-500 text-white"
+              class="text-white text-center"
+              :class="result.isStatSig ? 'bg-greenMinor' : 'bg-blueMinor'"
               id="aConversion"
               v-model="aConversion"
             />
-            <div id="arrow"></div>
-            <div class="conversion-rate" id="aConversionRate">
-              {{ aConversionRate }}%
-            </div>
+            <div id="arrow border-2 border-lime-300"></div>
+            <div class="" id="aConversionRate">{{ aConversionRate }}%</div>
           </div>
-          <div class="grid grid-cols-5 p-3 bg-white text-black">
+          <div class="grid grid-cols-calc gap-3 p-3 text-black">
             <span>B</span>
             <input
               type="text"
-              class="visitor"
+              class="text-center"
               id="bVisitor"
               v-model="bVisitor"
             />
             <input
               type="text"
-              class="conversion"
+              class="text-center"
               id="bConversion"
               v-model="bConversion"
             />
@@ -52,10 +55,12 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-evenly p-3 text-sm">
-          <fieldset class="outline-dashed outline-1 p-3 mt-3 outline-gray-500">
+        <!-- Options -->
+        <div class="grid grid-cols-2 gap-10 py-6 text-sm">
+          <!-- Hypothesis Option -->
+          <fieldset class="shadow-md p-3">
             <legend class="font-medium">Hypothesis</legend>
-            <div class="flex gap-3">
+            <div class="flex gap-3 justify-evenly items-center">
               <div>
                 <input
                   type="radio"
@@ -63,7 +68,7 @@
                   value="false"
                   v-model="isTwoTailed"
                 />
-                <label for="one-sided">One-Sided</label>
+                <label for="one-sided"> One-Sided</label>
               </div>
               <div>
                 <input
@@ -72,13 +77,14 @@
                   value="true"
                   v-model="isTwoTailed"
                 />
-                <label for="two-sided">Two-Sided</label>
+                <label for="two-sided"> Two-Sided</label>
               </div>
             </div>
           </fieldset>
-          <fieldset class="outline-dashed outline-1 p-3 mt-3 outline-gray-500">
+          <!-- Confidence Option -->
+          <fieldset class="shadow-md p-3">
             <legend class="font-medium">Confidence</legend>
-            <div class="flex gap-3">
+            <div class="flex gap-3 justify-evenly items-center">
               <div>
                 <input
                   type="radio"
@@ -86,7 +92,7 @@
                   value="90"
                   v-model="confidence"
                 />
-                <label for="ninety">90%</label>
+                <label for="ninety"> 90%</label>
               </div>
               <div>
                 <input
@@ -95,7 +101,7 @@
                   value="95"
                   v-model="confidence"
                 />
-                <label for="ninety-five">95%</label>
+                <label for="ninety-five"> 95%</label>
               </div>
               <div>
                 <input
@@ -104,21 +110,24 @@
                   value="99"
                   v-model="confidence"
                 />
-                <label for="ninety-five">99%</label>
+                <label for="ninety-five"> 99%</label>
               </div>
             </div>
           </fieldset>
         </div>
-        <button
+        <!-- <button
           type="submit"
           formmethod="get"
-          class="bg-green-600 p-3 mx-auto mt-6 rounded text-white"
+          class="bg-green-600 p-3 mx-auto mt-6 rounded text-white hover:-translate-y-0.5 duration-500 shadow-md"
         >
           Calculate
-        </button>
+        </button> -->
       </div>
-      <div class="w-1/3 bg-sky-200 p-3 flex flex-col justify-evenly">
-        <h3 class="text-green-700 font-bold text-lg tracking-wider">
+      <div class="md:w-1/3 p-6 flex flex-col justify-evenly shadow-md bg-white">
+        <h3
+          class="font-bold text-lg tracking-wider mb-4"
+          :class="result.isStatSig ? 'text-greenMain' : 'text-blueMain'"
+        >
           {{ result.testSummary }}
         </h3>
         <div class="details flex flex-col gap-3">

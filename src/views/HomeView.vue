@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <h3>A/B Test Calculator</h3>
     <Calculator2 />
   </div>
 </template>
